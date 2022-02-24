@@ -4,9 +4,9 @@
 
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
 
     <title>{% block title %}{% endblock %}</title>
 
@@ -19,9 +19,11 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/one-page-wonder.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/clean-blog.min.css' %}" rel="stylesheet">
+
 
     <!-- My style -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/mystyle.css' %}">
+    <link href="{% static 'css/mystyle.css' %}" rel="stylesheet" type="text/css">
     {% block head %}{% endblock %}
   </head>
 
@@ -31,7 +33,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
           <div class="container">
             <a class="navbar-brand" href="{% url 'diary:index' %}">PRIVATE DIARY</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbarResponsive" data-toggle="collapse" type="button">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -39,20 +41,47 @@
                 <li class="nav-item {% block active_inquiry %}{% endblock %}">
                   <a class="nav-link" href="{% url 'diary:inquiry' %}">INQUIRY</a>
                 </li>
+                  {% if user.is_authenticated %}
+                  <li class="nav-item {% block active_diary_list %}{% endblock %}">
+                      <a class="nav-link" href="{% url 'diary:diary_list' %}">DIARY LIST</a>
+                  </li>
+                  {% endif %}
               </ul>
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Sign Up</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Log In</a>
-                </li>
+                <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'account_logout' %}">Log Out</a>
+                  </li>
+                {% else %}
+                  <li class="nav-item {% block active_signup %}{% endblock %}">
+                      <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
+                  </li>
+                  <li class="nav-item {% block active_login %}{% endblock %}">
+                      <a class="nav-link" href="{% url 'account_login' %}">Log In</a>
+                  </li>
+                {% endif %}
               </ul>
             </div>
           </div>
         </nav>
 
         {% block header%}{% endblock %}
+
+        {% if messages %}
+        <div class="container">
+          <div class="row">
+            <div class="my-div-style w-100">
+              <ul class="messages" style="list-style: none;">
+                {% for message in messages %}
+                <li %} %} class="{{ message.tags }}" endif if message.tags {% {%>
+                  {{ message }}
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+        {% endif %}
 
         {% block contents %}{% endblock %}
 
